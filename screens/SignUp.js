@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, ActivityIndicator, Keyboard, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { Text, View, Image, ActivityIndicator, Keyboard, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { FormLabel, FormInput, Button } from 'react-native-elements';
 import { Camera, Permissions } from 'expo';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 import { config } from './../config/config';
 
-class Login extends React.Component {
+class SignUp extends React.Component {
 
   state = {
     name: '',
@@ -83,7 +83,7 @@ class Login extends React.Component {
       )
     }
      return (
-      <View style={{ flex:1 }}>
+      <View style={{ flex:1, backgroundColor: '#F6F3DA' }}>
       <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={this.keyboardVerticalOffset}>
         <View style={{marginTop: 50, marginBottom: 20, alignItems: 'center'}}>
           <Text style={{fontSize: 40}}>Crea una cuenta</Text>
@@ -131,7 +131,7 @@ class Login extends React.Component {
             <Button
               large
               title='CANCELAR'
-              buttonStyle={{ marginTop:20, backgroundColor: 'red' }}
+              buttonStyle={[styles.btns,{backgroundColor: '#EB330E'}]}
               onPress={() => {this.props.navigation.goBack()}}
             />
           </View>
@@ -139,7 +139,7 @@ class Login extends React.Component {
             <Button
               large
               title='CREAR'
-              buttonStyle={{ marginTop:20, backgroundColor: 'green' }}
+              buttonStyle={[styles.btns,,{backgroundColor: 'green'}]}
               onPress={() => {this._createAccount()}}
             />
           </View>
@@ -157,4 +157,16 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, actions)(Login);
+export default connect(mapStateToProps, actions)(SignUp);
+
+const styles = StyleSheet.create({
+  btns: {
+    borderRadius: 20,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.5
+  }
+});

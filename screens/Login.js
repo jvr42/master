@@ -65,13 +65,13 @@ class Login extends React.Component {
           <Button
             large
             title='INICIA SESION'
-            buttonStyle={[{ marginTop:20, backgroundColor: 'green' }, styles.btns]}
+            buttonStyle={[{ marginTop:10, backgroundColor: 'green' }, styles.btns]}
             onPress={() => {this._login()}}
           />
           <Button
             large
             title='CREA UNA CUENTA'
-            buttonStyle={[{ marginTop:20, backgroundColor: 'blue' }, styles.btns]}
+            buttonStyle={[{ marginTop:10, backgroundColor: 'blue' }, styles.btns]}
             onPress={() => {this.props.navigation.navigate('signup')}}
           />
         </View>
@@ -92,11 +92,11 @@ class Login extends React.Component {
       )
     }
      return (
-      <View style={{ flex: 1, marginTop:90 }}>
+      <View style={{ flex: 1, paddingTop:80, backgroundColor: '#F6F3DA'}}>
 
         <View style={{marginBottom: 20, alignItems: 'center'}}>
-        <Image style={{height: 100, width: 100, alignItems: 'center'}}
-          source={{uri: 'https://icon-icons.com/icons2/560/PNG/512/Pay-per-Click-(PPC)_icon-icons.com_53742.png'}}/>
+        <Image style={{height: 150, width: 150, alignItems: 'center'}}
+          source={require('./../assets/logo.png')}/>
         </View>
 
         <FormLabel>Correo Electrónico:</FormLabel>
@@ -135,11 +135,12 @@ export default connect(mapStateToProps, actions)(Login);
 
 const styles = StyleSheet.create({
   btns: {
+    borderRadius: 20,
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 1
     },
-    shadowOpacity: 0.3
+    shadowOpacity: 0.5
   }
 });

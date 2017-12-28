@@ -19,25 +19,21 @@ class Main extends React.Component {
 
   state = {}
 
-  componentWillMount(){
-    console.log(this.props)
-  }
-
   _logout = () => {
     this.props.navigation.navigate('login');
   }
 
   render() {
       return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: '#F6F3DA'}}>
           <View style={styles.headerContainer}>
             <TouchableOpacity onPress={() => this._logout()}>
               <Icon
-                iconStyle={{marginTop: 35, opacity: 0.5}}
+                iconStyle={{marginTop: 20, opacity: 1,paddingRight: 15}}
                 name='log-out'
                 type='feather'
-                color='#000000'
-                size={40}
+                color='#ffffff'
+                size={25}
               />
             </TouchableOpacity>
           </View>
@@ -74,10 +70,11 @@ export default connect(mapStateToProps, actions)(Main);
 
 const styles = StyleSheet.create({
   headerContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: '#24BAB6',
+    flexDirection: 'row',
     height: 80,
-    alignItems: 'flex-end',
-    paddingRight: 15
+    justifyContent: 'flex-end',
+    alignItems: 'center'
   },
   headerText: {
 
@@ -86,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   btns: {
-    width: 180,
-    height:180,
+    width: 150,
+    height:150,
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
@@ -96,18 +93,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3
   },
   welcomeContainer: {
-    marginTop: 60,
+    marginTop: 100,
     alignItems: 'center',
     margin: 20,
   },
   welcomeText:{
-    fontSize: 30
+    fontSize: 45,
+    fontWeight: 'bold'
   },
   questionContainer: {
     alignItems: 'center'
   },
   questionText:{
-    fontSize: 25,
+    fontSize: 19,
     textAlign: 'center',
     marginBottom: 20
   },

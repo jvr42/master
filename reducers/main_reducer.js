@@ -1,6 +1,7 @@
 import {
   CREATE_DEBIT,
-  CREATE_CREDIT
+  CREATE_CREDIT,
+  CREATE_CATEGORY
 } from '../actions/types';
 
 export default function(state = '', action) {
