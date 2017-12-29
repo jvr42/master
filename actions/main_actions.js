@@ -21,7 +21,6 @@ export const createCredit = () => {
   }
 };
 
-
 export const createCategory = (token, id, categoryName) => async dispatch => {
 
   let response = await fetch(`${config.API_PROD}/${id}/category`, {
@@ -34,7 +33,8 @@ export const createCategory = (token, id, categoryName) => async dispatch => {
   });
 
   let userData = await response.json();
-
+  userData.categories.reverse();
+  
   dispatch({
     type: CREATE_CATEGORY,
     payload: userData

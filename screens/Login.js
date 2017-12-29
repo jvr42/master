@@ -8,58 +8,15 @@ import { config } from './../config/config';
 
 class Login extends React.Component {
 
-  state = {
-    email: 'jvr42@hotmail.com',
-    password: 'admin',
-    errMessage: '',
-    loading: false,
-    signinIn: false
-  }
-
   _login = async () => {
-
-    if (this.state.email == '' || this.state.email.trim() == '' || this.state.password == '')
-    {
-      Alert.alert('Error','Ingresa tus datos para continuar.');
-      return;
+    let result = await this.props.Login({email: this.props.email, password: this.props.password});
+    if (result){
+      this.props.navigation.navigate('main')
     }
-
-    this.setState({signinIn: true, errMessage: ''})
-
-    let data = {
-      email: this.state.email,
-      password: this.state.password
-    }
-
-    let result = await this.props.Login(data);
-
-    if (!result){
-
-      this.setState({
-        signinIn: false,
-        errMessage: this.props.errMessage,
-        password: ''
-      })
-
-    } else {
-
-      this.setState({
-        email: '',
-        password: '',
-        errMessage: '',
-        loading: false,
-        signinIn: false
-      })
-
-      Keyboard.dismiss()
-
-      this.props.navigation.navigate('app');
-    }
-
   }
 
   renderSigninIn(){
-    if (this.state.signinIn == false){
+    if (this.props.loading == false){
       return (
         <View>
           <Button
@@ -84,13 +41,6 @@ class Login extends React.Component {
   }
 
   render() {
-    if (this.state.loading == true){
-      return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large"/>
-        </View>
-      )
-    }
      return (
       <View style={{ flex: 1, paddingTop:80, backgroundColor: '#F6F3DA'}}>
 
@@ -101,20 +51,20 @@ class Login extends React.Component {
 
         <FormLabel>Correo Electrónico:</FormLabel>
         <FormInput
-          value={this.state.email}
-          onChangeText={(email)=>{this.setState({email})}}
+          value={this.props.email}
+          onChangeText={(email)=>{this.props.loginUpdate({prop: 'email', value: email})}}
           inputStyle={{paddingLeft:10}}/>
 
         <FormLabel>Contraseña:</FormLabel>
         <FormInput
-          value={this.state.password}
-          onChangeText={(password)=>{this.setState({password})}}
+          value={this.props.password}
+          onChangeText={(password)=>{this.props.loginUpdate({prop: 'password', value: password})}}
           secureTextEntry
           inputStyle={{paddingLeft:10}}
         />
 
         <View style={{paddingTop: 10, alignItems: 'center'}}>
-          <Text style={{color: 'red'}}>{this.state.errMessage}</Text>
+          <Text style={{color: 'red'}}>{this.props.errMessage}</Text>
         </View>
 
         {this.renderSigninIn()}
@@ -125,9 +75,9 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => {
+  let { email, password, loading, errMessage, user } = state.auth
   return {
-    errMessage: state.auth.errMessage,
-    token: state.auth.token
+    email, password, loading, errMessage, user
   }
 }
 

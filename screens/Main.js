@@ -19,6 +19,10 @@ class Main extends React.Component {
 
   state = {}
 
+  componentWillMount(){
+    console.log(this.props)
+  }
+
   _logout = () => {
     this.props.navigation.navigate('login');
   }
@@ -44,10 +48,10 @@ class Main extends React.Component {
             <Text style={styles.questionText}>¿Qué operación quieres realizar?</Text>
           </View>
           <View style={styles.btnsContainer}>
-            <TouchableOpacity onPress={() => {this.props.createCredit(); this.props.navigation.navigate('categories')}}>
+            <TouchableOpacity onPress={() => {/*this.props.createCredit(); */this.props.navigation.navigate('categories')}}>
               <Image style={styles.btns} source={require('./../assets/plus.png')}/>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {this.props.createDebit(); this.props.navigation.navigate('categories')}}>
+            <TouchableOpacity onPress={() => {/*this.props.createDebit(); */this.props.navigation.navigate('categories')}}>
               <Image style={styles.btns} source={require('./../assets/minus.png')}/>
             </TouchableOpacity>
           </View>
@@ -62,7 +66,6 @@ class Main extends React.Component {
 const mapStateToProps = state => {
   return {
     user: state.auth.user,
-    token: state.auth.token
   }
 }
 

@@ -21,10 +21,9 @@ import { config } from './../config/config';
 import { FlatList, RectButton } from 'react-native-gesture-handler';
 
 import AppleStyleSwipeableRow from './GestureHandler/AppleStyleSwipeableRow';
-import GmailStyleSwipeableRow from './GestureHandler/GmailStyleSwipeableRow';
 
 const Row = ({ item }) => (
-  <RectButton style={styles.rectButton} onPress={() => {}}>
+  <RectButton style={styles.rectButton} onPress={() => Alert.alert(item.name)}>
     <Text style={styles.fromText}>{item.name}</Text>
   </RectButton>
 );
@@ -41,19 +40,14 @@ class Categories extends React.Component {
 
   state = {processing: false, categoryName: ''}
 
-  createCategory = async () => {
-    if (this.state.categoryName != '' && this.state.categoryName.trim() != ''){
-      this.setState({processing: true})
-      await this.props.createCategory(this.props.token, this.props.user._id, this.state.categoryName)
-      this.setState({processing: false, categoryName: ''})
-      Keyboard.dismiss();
-    } else {
-      Alert.alert("Error", "Ingresa un nombre para la categoria.")
-    }
-  }
-
   _logout = () => {
     this.props.navigation.navigate('login');
+  }
+
+  createCategory = async () => {
+    this.setState({processing: true})
+    await this.props.createCategory(this.props.token, this.props.user._id, this.state.categoryName)
+    this.setState({processing: false, categoryName: ''})
   }
 
   renderCreateCategory = () => {
@@ -61,10 +55,7 @@ class Categories extends React.Component {
       return (
         <Button buttonStyle={styles.btn}
           title="CREAR CATEGORIA"
-          onPress={()=>{
-              this.createCategory();
-            }
-          }
+          onPress={()=>{this.createCategory()}}
         />
       );
     } else {
@@ -74,7 +65,23 @@ class Categories extends React.Component {
     }
   }
 
+  renderFlatList = () => {
+    if (this.props.user.categories){
+      return (
+        <FlatList
+          data={this.props.user.categories}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          renderItem={({ item, index }) => <SwipeableRow item={item} index={index} />}
+          keyExtractor={(item, index) => index}
+        />
+      );
+    } else {
+      return (<ActivityIndicator size="large" color="black"/>)
+    }
+  }
+
   render() {
+    if (this.props.user.categories){
       return (
         <View style={{flex: 1, backgroundColor: '#F6F3DA'}}>
         <View style={styles.headerContainer}>
@@ -104,25 +111,19 @@ class Categories extends React.Component {
 
           {this.renderCreateCategory()}
         </KeyboardAvoidingView>
-
-        <FlatList
-          style={{flex: 1}}
-          data={this.props.categories}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          renderItem={({ item, index }) => <SwipeableRow item={item} index={index} />}
-          keyExtractor={(item, index) => index}
-        />
-
+        {this.renderFlatList()}
         </View>
       );
+    } else {
+      return (
+        <ActivityIndicator size="large" color="black"/>
+      );
+    }
   }
 }
 
-
-
 const mapStateToProps = state => {
   return {
-    categories: state.auth.user.categories.reverse(),
     user: state.auth.user,
     token: state.auth.token,
     operation: state.operation
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F1F1F1',
   },
   separator: {
     backgroundColor: 'rgb(200, 199, 204)',
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
   },
   fromText: {
     fontWeight: 'bold',
-    fontSize: 35,
+    fontSize: 20,
     backgroundColor: 'transparent',
   },
   messageText: {

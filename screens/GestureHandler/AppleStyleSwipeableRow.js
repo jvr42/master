@@ -62,6 +62,7 @@ export default class AppleStyleSwipeableRow extends Component {
         friction={2}
         leftThreshold={30}
         rightThreshold={40}
+        renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}>
         {children}
       </Swipeable>

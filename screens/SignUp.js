@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, ActivityIndicator, Keyboard, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { Text, View, Image, ActivityIndicator, Keyboard, TouchableOpacity, KeyboardAvoidingView, Platform, StyleSheet, Alert } from 'react-native';
 import { FormLabel, FormInput, Button } from 'react-native-elements';
 import { Camera, Permissions } from 'expo';
 import { connect } from 'react-redux';
@@ -9,123 +9,26 @@ import { config } from './../config/config';
 
 class SignUp extends React.Component {
 
-  state = {
-    name: '',
-    lastname: '',
-    email: '',
-    password: '',
-    password2: '',
-    errMessage: '',
-    loading: false,
-    signingUp: false
-  }
-
-  async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
-  }
-
   _createAccount = async () => {
-    if (this.state.password === this.state.password2){
-
-      this.setState({password: this.state.password})
-
-      let data = {
-        name: this.state.name,
-        lastname: this.state.lastname,
-        email: this.state.email,
-        password : this.state.password
+    if (this.props.password == this.props.password2){
+      let userInfo = {
+        name: this.props.name,
+        lastname: this.props.lastname,
+        email: this.props.email,
+        password: this.props.password
       }
-
-      let result = await this.props.SignUp(data);
-
-      if (!result){
-
-        this.setState({
-          signingUp: false,
-          errMessage: this.props.errMessage,
-          password: '',
-          password2: ''
-        })
-
-      } else {
-
-        this.setState({
-          email: '',
-          name: '',
-          lastname: '',
-          password: '',
-          password2: '',
-          errMessage: '',
-          loading: false,
-          signingUp: false
-        })
-
-        Keyboard.dismiss()
-
-        this.props.navigation.navigate('app');
+      let result = await this.props.SignUp(userInfo)
+      if (result){
+        this.props.navigation.navigate('main')
+      }
+    } else {
+      Alert.alert("Error", "Las contraseñas no coinciden")
     }
   }
-}
 
-  _picture = () => {
-    this.props.navigation.navigate('picture')
-  }
-
-  static keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
-
-  render() {
-    if (this.state.loading == true){
+  renderSignupBtns = () => {
+    if (this.props.loading == false){
       return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large"/>
-        </View>
-      )
-    }
-     return (
-      <View style={{ flex:1, backgroundColor: '#F6F3DA' }}>
-      <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={this.keyboardVerticalOffset}>
-        <View style={{marginTop: 50, marginBottom: 20, alignItems: 'center'}}>
-          <Text style={{fontSize: 40}}>Crea una cuenta</Text>
-        </View>
-          <FormLabel>Nombre:</FormLabel>
-          <FormInput
-            value={this.state.name}
-            onChangeText={(name)=>{this.setState({name})}}
-            inputStyle={{paddingLeft:10}}/>
-
-          <FormLabel>Apellido:</FormLabel>
-          <FormInput
-            value={this.state.lastname}
-            onChangeText={(lastname)=>{this.setState({lastname})}}
-            inputStyle={{paddingLeft:10}}/>
-
-          <FormLabel>Correo Electrónico:</FormLabel>
-          <FormInput
-            value={this.state.email}
-            onChangeText={(email)=>{this.setState({email})}}
-            inputStyle={{paddingLeft:10}}/>
-
-          <FormLabel>Contraseña:</FormLabel>
-          <FormInput
-            value={this.state.password}
-            onChangeText={(password)=>{this.setState({password})}}
-            secureTextEntry
-            inputStyle={{paddingLeft:10}}
-          />
-
-          <FormLabel>Confirmar contraseña:</FormLabel>
-          <FormInput
-            value={this.state.password2}
-            onChangeText={(password2)=>{this.setState({password2})}}
-            secureTextEntry
-            inputStyle={{paddingLeft:10}}
-          />
-        </KeyboardAvoidingView>
-        <View style={{paddingTop: 10}}>
-          <Text style={{color: 'red'}}>{this.state.errMessage}</Text>
-        </View>
-
         <View style={{flexDirection: 'row', justifyContent: 'space-around' }}>
           <View>
             <Button
@@ -144,6 +47,60 @@ class SignUp extends React.Component {
             />
           </View>
         </View>
+      );
+    } else {
+      return (<ActivityIndicator size="large" color="black" />);
+    }
+  }
+
+  static keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
+
+  render() {
+     return (
+      <View style={{ flex:1, backgroundColor: '#F6F3DA' }}>
+      <KeyboardAvoidingView behavior='position' keyboardVerticalOffset={this.keyboardVerticalOffset}>
+        <View style={{marginTop: 50, marginBottom: 20, alignItems: 'center'}}>
+          <Text style={{fontSize: 40}}>Crea una cuenta</Text>
+        </View>
+          <FormLabel>Nombre:</FormLabel>
+          <FormInput
+            value={this.props.name}
+            onChangeText={(name)=>{this.props.signupUpdate({prop: 'name', value: name })}}
+            inputStyle={{paddingLeft:10}}/>
+
+          <FormLabel>Apellido:</FormLabel>
+          <FormInput
+            value={this.props.lastname}
+            onChangeText={(lastname)=>{this.props.signupUpdate({prop: 'lastname', value: lastname})}}
+            inputStyle={{paddingLeft:10}}/>
+
+          <FormLabel>Correo Electrónico:</FormLabel>
+          <FormInput
+            value={this.props.email}
+            onChangeText={(email)=>{this.props.signupUpdate({prop: 'email', value: email})}}
+            inputStyle={{paddingLeft:10}}/>
+
+          <FormLabel>Contraseña:</FormLabel>
+          <FormInput
+            value={this.props.password}
+            onChangeText={(password)=>{this.props.signupUpdate({prop: 'password', value: password})}}
+            secureTextEntry
+            inputStyle={{paddingLeft:10}}
+          />
+
+          <FormLabel>Confirmar contraseña:</FormLabel>
+          <FormInput
+            value={this.props.password2}
+            onChangeText={(password2)=>{this.props.signupUpdate({prop: 'password2', value: password2})}}
+            secureTextEntry
+            inputStyle={{paddingLeft:10}}
+          />
+        </KeyboardAvoidingView>
+        <View style={{paddingTop: 10}}>
+          <Text style={{color: 'red'}}>{this.props.errMessage}</Text>
+        </View>
+
+        {this.renderSignupBtns()}
 
       </View>
     );
@@ -151,9 +108,9 @@ class SignUp extends React.Component {
 }
 
 const mapStateToProps = state => {
+  let { name, lastname, email, password, password2, loading, errMessage } = state.signup
   return {
-    errMessage: state.auth.errMessage,
-    token: state.auth.token
+    name, lastname, email, password, password2, loading, errMessage
   }
 }
 
